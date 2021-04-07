@@ -25,12 +25,10 @@ def init() -> None:
 
 def main() -> None:
     init()
-    print(oec.misc.depth())
-    print(oec.misc.rev())
-    print(oec.misc.countries())
-    print(oec.misc.prods('hs6', 'hs07'))
-    print(oec.all.countries())
-    print(oec.all.prods())
+
+    prod = oec.misc.prods('hs6', 'hs07')
+    print(prod)
+    print(oec.all.tarrifs(prod))
 
 
 if __name__ == '__main__':

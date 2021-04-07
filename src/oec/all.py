@@ -57,12 +57,10 @@ def countries() -> List[Tuple]:
 
     return cs
 
-url_prod: str = 'https://oec.world/olap-proxy/data.jsonrecords'
 
-
-def prod_params(rev: str) -> Dict:
+def prod_params(rev_str: str) -> Dict:
     param_prod: Dict = {
-        'cube': f'complexity_pci_a_{rev}_hs6',
+        'cube': f'complexity_pci_a_{rev_str}_hs6',
         'drilldowns': 'HS6,PCI+Rank,Year',
         'measures': 'PCI',
         'parents': 'true',
@@ -74,10 +72,11 @@ def prod_params(rev: str) -> Dict:
 
 def prods() -> List[Tuple]:
     pd: List[Tuple] = []
+    url: str = 'https://oec.world/olap-proxy/data.jsonrecords'
 
     for a in rev():
         params: Dict[str, str] = prod_params(a)
-        resp: str = requests.get(url_prod, params=params).text
+        resp: str = requests.get(url, params=params).text
         js_obj: Dict = json.loads(resp)
 
         for c in js_obj['data']:
@@ -98,3 +97,56 @@ def prods() -> List[Tuple]:
             pd.append(tup)
 
     return pd
+
+
+def tarr_params(hs6_str: str) -> Dict:
+    param_tarr: Dict = {
+        'HS6':  hs6_str,
+        'cube': 'tariffs_i_wits_a_hs_new',
+        'drilldowns': 'Year,HS6,Partner+Country,Reporter+Country,Agreement',
+        'measures': 'Tariff',
+        'parents': 'true',
+        'sparse': 'true',
+    }
+
+    return param_tarr
+
+
+def tarrifs(hs6s: List[str]) -> List[Tuple]:
+    hs: List[Tuple] = []
+    url: str = 'https://oec.world/olap-proxy/data'
+
+    for a in hs6s:
+        print('Getting', a)
+
+        params: Dict = tarr_params(a)
+        resp: str = requests.get(url, params=params).text
+        js_obj: Dict = json.loads(resp)
+
+        for c in js_obj['data']:
+            tup: Tuple = (
+                c['Year'],
+                c['Section ID'],
+                c['Section'],
+                c['HS2 ID'],
+                c['HS2'],
+                c['HS4 ID'],
+                c['HS4'],
+                c['HS6 ID'],
+                c['HS6'],
+                c.get('Partner Continent ID'),
+                c.get('Partner Continent'),
+                c.get('Partner Country ID'),
+                c.get('Partner Country'),
+                c.get('Reporter Continent ID'),
+                c.get('Reporter Continent'),
+                c.get('Reporter Country ID'),
+                c.get('Reporter Country'),
+                c.get('Agreement ID'),
+                c.get('Agreement'),
+                c['Tariff'],
+            )
+
+            hs.append(tup)
+
+    return hs
