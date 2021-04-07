@@ -4,6 +4,24 @@ from typing import List
 import json
 import requests
 
+
+def depth() -> List[str]:
+    return [
+        'hs2',
+        'hs4',
+        'hs6'
+    ]
+
+
+def rev() -> List[str]:
+    return [
+        'hs92',
+        'hs96',
+        'hs02',
+        'hs07'
+    ]
+
+
 url_country: str = 'https://oec.world/olap-proxy/data.jsonrecords'
 param_country: Dict[str, str] = {
     'cube': 'complexity_eci_a_hs96_hs6',
