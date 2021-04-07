@@ -5,6 +5,7 @@ from typing import List
 
 import oec
 import oec.misc
+import oec.all
 
 
 def init_log() -> None:
@@ -22,19 +23,14 @@ def init() -> None:
     init_log()
 
 
-depth: List[str] = ['hs4', 'hs6']
-rev: List[str] = [
-    'hs92',
-    'hs96',
-    'hs02',
-    'hs07'
-]
-
-
 def main() -> None:
     init()
+    print(oec.misc.depth())
+    print(oec.misc.rev())
     print(oec.misc.countries())
-    print(oec.misc.prods('hs6', 'hs07'))    
+    print(oec.misc.prods('hs6', 'hs07'))
+    print(oec.all.countries())
+    print(oec.all.prods())
 
 
 if __name__ == '__main__':
